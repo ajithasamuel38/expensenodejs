@@ -1,6 +1,7 @@
 const link = "http://localhost:3000/user/signup";
 const form = document.getElementById('signup');
 form.addEventListener('submit', postuserdetails);
+const errormessage = document.getElementById('error-message');
 
 
 async function postuserdetails(event){
@@ -13,16 +14,24 @@ async function postuserdetails(event){
         email:email,
         password:password
     };
-    clearForm();
+    errormessage.textContent = '';
     
     try{
         const response = await axios.post(link, postObj);
+
+        clearForm();
        
         console.log(response);
       
     }
     catch(err){
         console.log(err);
+        if (err.response && err.response.status === 400 && err.response.data.message === "Email already exists") {
+            // Display error message on the UI
+            errormessage.textContent = "Email already exists";
+        } else {
+            errormessage.textContent = "An error occurred. Please try again later.";
+        }
     }
     
 }

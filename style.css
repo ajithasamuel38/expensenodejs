@@ -58,3 +58,10 @@ button:focus {
     color: red;
     margin-top: 5px;
 }
+
+.error-message {
+    color: red;
+    font-size: 24px; /* Increase font size */
+    text-align: center; /* Center align the text */
+    margin-top: 20px; /* Adjust margin as needed */
+}
