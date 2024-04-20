@@ -13,6 +13,8 @@ async function postuserdetails(event){
         email:email,
         password:password
     };
+    clearForm();
+    
     try{
         const response = await axios.post(link, postObj);
        
@@ -21,7 +23,6 @@ async function postuserdetails(event){
     }
     catch(err){
         console.log(err);
-        clearForm();
     }
     
 }
