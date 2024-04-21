@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Sequelize = require('sequelize');
 
+
 exports.postuserdetails = async(req, res, next) => {
     
     try{
@@ -18,13 +19,31 @@ exports.postuserdetails = async(req, res, next) => {
         }
 }
 
-exports.getAll = async (req, res, next) => {
-    try {
-        const result = await User.findAll();
-        console.log(result);
-        res.status(200).json(result); 
-    } catch(err) {
-        console.log(err);
-        res.status(400).json({ message: "Internal server error" });
-    }
-  };
+exports.userlogindetails = async (req, res, next)=>{
+
+    console.log(req.body);
+    const {email, password} = req.body;
+   
+    try{
+       
+
+        const user  = await User.findOne({where: {email: email}});
+
+        if(user){
+            if (password === user.password) {
+                res.status(200).json({ message: "User logged in Successfully" });
+            } else {
+                res.status(401).json({ message: "User not authorized" });
+            }
+            
+        }else{
+            
+                res.status(404).json({message: "User not found"});
+        }
+        
+        }
+        catch (err){
+            console.error("Error logging in user:", err);
+        res.status(500).json({ message: "Internal server error" });
+        }
+}

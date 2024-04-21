@@ -1,4 +1,4 @@
-const link = "http://localhost:3000/user/signup";
+const link = "http://localhost:3000/user/login";
 
 const errormessage = document.getElementById('error-message');
 
@@ -7,42 +7,27 @@ login.addEventListener('submit', handlecases);
 
 async function handlecases(event){
     event.preventDefault();
+    const email = document.getElementById('email').value
+    const password = document.getElementById('password').value
+    const myObj = {
+        email: email,
+        password: password
+    };
+    
     try{
-        const response = await axios.get(link);
-  
-       console.log(response);
-       const users = response.data; // Assuming response.data contains the user data
-       const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        errormessage.textContent = '';
-        const user = users.find(user => (user.email === email || user.password=== password));
-    
-
-    
-        if(user){
-        if(user.password === password && user.email===email){
-            alert("Logged in Successfully");
-        } else if(user.email===email){
-            
-            errormessage.textContent= "Password is incorrect";
-            
-        }else{
-            errormessage.textContent = "Email does not exist";
-        }
-    }else{
-        errormessage.textContent = "User does not exist";
-    }
+        const response = await axios.post(link, myObj)
+        console.log(response);
        
+            alert(response.data.message);
         
-            
-    
-}
-
-catch {
-    console.error('Error fetching user data:');
-    
-   
-    errormessage.textContent= "User does not exist";
-}
+    }catch(err){
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+            errormessage.textContent = err.response.data.message;
+        } else {
+            // Handle other types of errors
+            errormessage.textContent = "An error occurred. Please try again later.";
+        }
+    }
 }
 

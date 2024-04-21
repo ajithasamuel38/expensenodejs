@@ -4,8 +4,8 @@ const adminController = require('../controllers/admin');
 
 const router = express.Router();
 
-router.get('/user/signup', adminController.getAll);
-
  router.post('/user/signup', adminController.postuserdetails);
+
+ router.post('/user/login', adminController.userlogindetails);
 
  module.exports = router;

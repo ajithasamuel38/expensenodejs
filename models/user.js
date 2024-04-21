@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/db');
 
-const User = sequelize.define('signup', {
+const User = sequelize.define('signups', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -10,7 +10,7 @@ const User = sequelize.define('signup', {
     },
     name:{
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     email:{
         type: Sequelize.STRING,
@@ -20,7 +20,10 @@ const User = sequelize.define('signup', {
     password:{
         type: Sequelize.STRING,
         allowNull: false
-    }
+    }, 
+        
+    
+
 })
 
 module.exports = User;
