@@ -1,13 +1,17 @@
 const User = require('../models/user');
 const Sequelize = require('sequelize');
-
+const bcrypt = require('bcrypt');
 
 exports.postuserdetails = async(req, res, next) => {
     
     try{
-        const result = await User.create(req.body);
-        console.log(req.body); 
-            res.status(201).json(result); 
+        const {name, email, password} = req.body;
+        const saltrounds = 10;
+        bcrypt.hash(password, saltrounds, async (err, hash)=>{
+            console.log(err);
+            await User.create({name, email, password: hash});
+            res.status(201).json({message: "User created successfully"});
+        })
         }catch(err){
             if (err instanceof Sequelize.UniqueConstraintError) {
                 // Unique constraint violation (e.g., email already exists)
@@ -30,13 +34,19 @@ exports.userlogindetails = async (req, res, next)=>{
         const user  = await User.findOne({where: {email: email}});
 
         if(user){
-            if (password === user.password) {
+            bcrypt.compare(password, user.password, (err, result)=>{
+                if(err){
+                    throw new error ("User does not exist");
+                }
+            
+            if (result===true) {
                 res.status(200).json({ message: "User logged in Successfully" });
             } else {
-                res.status(401).json({ message: "User not authorized" });
+                res.status(401).json({ message: "Password is incorrect" });
             }
             
-        }else{
+        })
+    }     else{
             
                 res.status(404).json({message: "User not found"});
         }
