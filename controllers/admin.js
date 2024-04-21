@@ -17,3 +17,14 @@ exports.postuserdetails = async(req, res, next) => {
             }
         }
 }
+
+exports.getAll = async (req, res, next) => {
+    try {
+        const result = await User.findAll();
+        console.log(result);
+        res.status(200).json(result); 
+    } catch(err) {
+        console.log(err);
+        res.status(400).json({ message: "Internal server error" });
+    }
+  };
