@@ -1,5 +1,5 @@
 const Expense = require('../models/expense');
-const Sequelize = require('sequelize');
+
 
 exports.postexpense = async(req, res, next) =>{
    try{ 
@@ -33,7 +33,7 @@ exports.deleteexpense = async(req, res, next) =>{
         await expensetodelete.destroy();
         res.status(200).json({ message: "Expense deleted successfully" });
     } catch (error) {
-        // Handle errors
+       
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
     }
