@@ -26,7 +26,7 @@ async function handlecases(event){
         if (err.response && err.response.data && err.response.data.message) {
             errormessage.textContent = err.response.data.message;
         } else {
-            // Handle other types of errors
+    
             errormessage.textContent = "An error occurred. Please try again later.";
         }
     }
