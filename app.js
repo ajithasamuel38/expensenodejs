@@ -3,7 +3,9 @@ const bodyParser = require("body-parser");
 
 const sequelize = require("./config/db"); 
 
-const routes = require("./routes/adminroutes")
+const adminroutes = require("./routes/adminroutes")
+
+const expenseroutes = require("./routes/expenseroutes")
 
 const errorController = require('./controllers/error');
 
@@ -15,7 +17,8 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
-app.use(routes);
+app.use(adminroutes);
+app.use(expenseroutes);
 app.use(errorController.get404);
 
 sequelize.sync(
