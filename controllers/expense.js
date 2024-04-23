@@ -14,8 +14,9 @@ exports.postexpense = async(req, res, next) =>{
 }
 
 exports.getexpense = async(req, res, next) =>{
+    console.log(req.body)
     try{
-        const response = await Expense.findAll();
+        const response = await Expense.findAll({where : { signupId: req.user.id}});
         res.status(200).json(response);
     }catch (err) {
         console.error(err);

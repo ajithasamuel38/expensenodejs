@@ -18,6 +18,7 @@ async function handlecases(event){
         const response = await axios.post(link, myObj)
        
         alert(response.data.message);
+        localStorage.setItem('token', response.data.token);
         window.location.href = '../expense/expense.html';
         
     }catch(err){

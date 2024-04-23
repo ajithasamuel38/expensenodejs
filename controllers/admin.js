@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 exports.postuserdetails = async(req, res, next) => {
     
@@ -22,7 +23,9 @@ exports.postuserdetails = async(req, res, next) => {
             }
         }
 }
-
+function generateAccessToken(id){
+    return jwt.sign({signupId: id}, "secretkey")
+}
 exports.userlogindetails = async (req, res, next)=>{
 
     console.log(req.body);
@@ -40,7 +43,7 @@ exports.userlogindetails = async (req, res, next)=>{
                 }
             
             if (result===true) {
-                res.status(200).json({ message: "User logged in Successfully" });
+                res.status(200).json({ message: "User logged in Successfully", token: generateAccessToken(user.id) });
             } else {
                 res.status(401).json({ message: "Password is incorrect" });
             }

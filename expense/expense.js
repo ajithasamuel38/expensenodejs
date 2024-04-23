@@ -42,8 +42,10 @@ async function displayexpense(obj){
 }
 
 async function showexpense(){
+    const token = localStorage.getItem('token');
+    
     try{
-        const details  = await axios.get(link);
+        const details  = await axios.get(link, {headers: {"Authorization" : token}});
         console.log(details);
         details.data.forEach(element=>{
            console.log(element);

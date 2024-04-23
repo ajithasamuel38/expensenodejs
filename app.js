@@ -9,6 +9,9 @@ const expenseroutes = require("./routes/expenseroutes")
 
 const errorController = require('./controllers/error');
 
+const User = require("./models/user");
+const Expense = require("./models/expense");
+
 const cors = require('cors'); 
 
 const app = express();
@@ -21,9 +24,11 @@ app.use(adminroutes);
 app.use(expenseroutes);
 app.use(errorController.get404);
 
-sequelize.sync(
-    { alter: true }
-).then((result)=>{
+User.hasMany(Expense);
+Expense.belongsTo(User);
+
+sequelize.sync({alter:true})
+.then((result)=>{
     console.log(result);
     app.listen(3000);
 }).catch((err)=>{
