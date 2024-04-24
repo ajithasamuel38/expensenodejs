@@ -2,9 +2,10 @@ const Expense = require('../models/expense');
 
 
 exports.postexpense = async(req, res, next) =>{
+    console.log(req.body);
    try{ 
 
-    const response = await Expense.create(req.body);
+    const response = await Expense.create({ ...req.body, signupId: req.user.id });
     res.status(201).json({message: "Expense Added Successfully", expense: response});
 
    }catch(err){
@@ -25,9 +26,11 @@ exports.getexpense = async(req, res, next) =>{
 }
 
 exports.deleteexpense = async(req, res, next) =>{
+    console.log(req.user);
     const id = req.params.id;
+    console.log(id);
     try{
-        const expensetodelete = await Expense.findByPk(id);
+        const expensetodelete = await Expense.findOne({where: {id: id, signupId: req.user.id}});
         if(!expensetodelete){
             return res.status(404).json({ message: "Expense not found" });
         }

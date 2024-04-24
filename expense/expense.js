@@ -18,10 +18,12 @@ async function addexpense(event){
     category: category
    }
    try{
-      const response = await axios.post(link, myObj);
+      const token = localStorage.getItem('token');
+      console.log(token);
+      const response = await axios.post(link, myObj, { headers: { "Authorization": token } });
       console.log(response.data.expense);
       displayexpense(response.data.expense);
-   }catch{
+   }catch(error){
      console.log(error);
    }
 }
@@ -42,6 +44,7 @@ async function displayexpense(obj){
 }
 
 async function showexpense(){
+    hidePremiumButton();
     const token = localStorage.getItem('token');
     
     try{
@@ -59,12 +62,14 @@ async function showexpense(){
 }
 
 async function deleteExpense(event){
+
+    const token = localStorage.getItem('token');
    
     if(event.target.classList.contains("delete")){
     const parentele = event.target.parentElement;
     const idvalue = event.target.id;
     try{
-        const response = await axios.delete(`${link}/${idvalue}`);
+        const response = await axios.delete(`${link}/${idvalue}`, {headers: {"Authorization" : token}});
         console.log(response);
         parentele.remove();
     }
@@ -74,4 +79,64 @@ async function deleteExpense(event){
     
 
 }
+}
+
+document.getElementById('rzy_btn').onclick = async function(e){
+    try{
+        const token = localStorage.getItem('token');
+    const response = await axios .get("http://localhost:3000/purchase/premium", {headers: {"Authorization": token}});
+    console.log(response);
+    var options = {
+        "key": response.data.key_id,
+        "order_id": response.data.order.id,
+        "handler": async function (response){
+            try {
+                await axios.post("http://localhost:3000/update-premium-status", {
+                    order_id: options.order_id,
+                    payment_id: response.razorpay_payment_id
+                }, { headers: { "Authorization": token } });
+                hidePremiumButton();
+                
+                alert("You are now a premium user!");
+            } catch (error) {
+                console.error("Error processing premium purchase:", error);
+                alert("An error occurred while processing the premium purchase. Please try again later.");
+            }
+        }
+    }
+    
+    const rzpy1 = new Razorpay(options);
+    rzpy1.open();
+    e.preventDefault();
+    rzpy1.on('payment.failed', function(response){
+        console.log(response);
+        alert("Something went wrong");
+    })
+    }catch(err){
+        console.log(err);
+    }
+    
+}
+
+function hidePremiumButton() {
+    const premiumButton = document.getElementById('rzy_btn');
+    const token = localStorage.getItem('token');
+    
+    // Check if the user is already a premium member
+    if (premiumButton && token) {
+        // Make a request to the server to check the user's premium status
+        axios.get("http://localhost:3000/check-premium-status", { headers: { "Authorization": token } })
+            .then(response => {
+                if (response.data.isPremium) {
+                    // User is already a premium member, hide the button
+                    premiumButton.style.display = 'none';
+                } else {
+                    // User is not a premium member, show the button
+                    premiumButton.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error("Error checking premium status:", error);
+            });
+    }
 }

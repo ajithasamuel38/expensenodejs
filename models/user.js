@@ -22,7 +22,9 @@ const User = sequelize.define('signups', {
         allowNull: false
     }, 
         
-    
+    Ispremium:{
+        type: Sequelize.BOOLEAN
+    }
 
 })
 
