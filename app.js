@@ -8,6 +8,7 @@ const adminroutes = require("./routes/adminroutes")
 const expenseroutes = require("./routes/expenseroutes")
 
 const purchaseroutes = require("./routes/premiumroutes");
+const premiumeroutes = require("./routes/leaderboard");
 
 const errorController = require('./controllers/error');
 
@@ -26,6 +27,7 @@ app.use(cors());
 app.use(adminroutes);
 app.use(expenseroutes);
 app.use(purchaseroutes);
+app.use(premiumeroutes);
 app.use(errorController.get404);
 
 User.hasMany(Expense);

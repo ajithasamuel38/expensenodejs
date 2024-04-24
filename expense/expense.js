@@ -45,6 +45,7 @@ async function displayexpense(obj){
 
 async function showexpense(){
     hidePremiumButton();
+    showLeaderBoard();
     const token = localStorage.getItem('token');
     
     try{
@@ -98,6 +99,7 @@ document.getElementById('rzy_btn').onclick = async function(e){
                 hidePremiumButton();
                 
                 alert("You are now a premium user!");
+                
             } catch (error) {
                 console.error("Error processing premium purchase:", error);
                 alert("An error occurred while processing the premium purchase. Please try again later.");
@@ -121,22 +123,44 @@ document.getElementById('rzy_btn').onclick = async function(e){
 function hidePremiumButton() {
     const premiumButton = document.getElementById('rzy_btn');
     const token = localStorage.getItem('token');
+    const messageElement = document.getElementById('premiumMessage');
     
-    // Check if the user is already a premium member
     if (premiumButton && token) {
-        // Make a request to the server to check the user's premium status
+        
         axios.get("http://localhost:3000/check-premium-status", { headers: { "Authorization": token } })
             .then(response => {
                 if (response.data.isPremium) {
-                    // User is already a premium member, hide the button
+                    
                     premiumButton.style.display = 'none';
+                    messageElement.innerText = 'You are a premium member now!';
+                    showLeaderBoard();
+                    messageElement.style.display = 'block';
                 } else {
-                    // User is not a premium member, show the button
+                    
                     premiumButton.style.display = 'block';
+                    messageElement.style.display = 'none';
                 }
             })
             .catch(error => {
                 console.error("Error checking premium status:", error);
             });
     }
+}
+
+async function showLeaderBoard(){
+    const inputElement = document.createElement('input');
+    inputElement.type= "button";
+    inputElement.value= 'Show LeaderBoard';
+    inputElement.onclick = async()=>{
+        const token = localStorage.getItem('token');
+        const response = await axios.get("http://localhost:3000/premium/showleaderboard", { headers: { "Authorization": token } });
+        console.log(response);
+        var leaderboardElem = document.getElementById('leaderboard');
+        leaderboardElem.innerHTML = '<h1>Leader Board</h1>';
+        response.data.forEach((userDetails) =>{
+            leaderboardElem.innerHTML += `<li>Name-${userDetails.name} Total Expense -${userDetails.totalexpense}`;
+        })
+    }
+    document.getElementById('premiumMessage').appendChild(inputElement);
+
 }
