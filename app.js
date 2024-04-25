@@ -30,7 +30,7 @@ app.use(purchaseroutes);
 app.use(premiumeroutes);
 app.use(errorController.get404);
 
-User.hasMany(Expense);
+User.hasMany(Expense, { as: 'expense'});
 Expense.belongsTo(User);
 
 User.hasMany(Order);
