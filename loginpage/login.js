@@ -19,7 +19,9 @@ async function handlecases(event){
        
         alert(response.data.message);
         localStorage.setItem('token', response.data.token);
+        console.log(response.data.totalexpense);
         window.location.href = '../expense/expense.html';
+       
         
     }catch(err){
         console.log(err);

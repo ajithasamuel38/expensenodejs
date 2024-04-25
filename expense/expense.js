@@ -158,7 +158,7 @@ async function showLeaderBoard(){
         var leaderboardElem = document.getElementById('leaderboard');
         leaderboardElem.innerHTML = '<h1>Leader Board</h1>';
         response.data.forEach((userDetails) =>{
-            leaderboardElem.innerHTML += `<li>Name-${userDetails.name} Total Expense -${userDetails.total_cost}`;
+            leaderboardElem.innerHTML += `<li>Name-${userDetails.name} Total Expense -${userDetails.totalexpense}`;
         })
     }
     document.getElementById('premiumMessage').appendChild(inputElement);
